@@ -1,0 +1,1225 @@
+@import "tailwindcss";
+
+:root {
+  --bg-main: #070b14;
+  --bg-navbar: #1a1a2e;
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --bg-glass-heavy: rgba(255, 255, 255, 0.08);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-glass-bright: rgba(255, 255, 255, 0.2);
+  --color-primary: #3b82f6;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100vh;
+  background: var(--bg-navbar);
+  border-right: 1px solid var(--border-glass);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s;
+}
+
+.sidebar.collapsed { width: 80px; }
+
+.sidebar-header {
+  padding: 1.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-glass);
+  background: var(--bg-glass);
+}
+
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+}
+
+.sidebar-logo {
+  height: 42px;
+}
+
+.sidebar-brand {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.sidebar.collapsed .sidebar-brand { display: none; }
+
+.brand-main { font-weight: 800; font-size: 1.1rem; }
+.brand-sub { font-size: 0.75rem; color: var(--color-primary); }
+
+.desktop-toggle-btn, .mobile-sidebar-toggle {
+  background: transparent; border: none; color: var(--text-main); cursor: pointer;
+}
+
+.sidebar-scrollable {
+  flex: 1; overflow-y: auto; padding: 1rem;
+}
+
+.sidebar-menu { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+
+.menu-heading { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin: 1rem 0 0.5rem 0.5rem; }
+
+.nav-link {
+  display: flex; align-items: center; padding: 0.8rem 1rem; color: var(--text-muted);
+  text-decoration: none; border-radius: 8px; cursor: pointer;
+}
+.nav-link:hover, .nav-link.active { background: var(--bg-glass-heavy); color: var(--text-main); }
+.nav-link.active { border-left: 3px solid var(--color-primary); }
+
+.nav-link .icon { margin-right: 0.8rem; }
+
+.sidebar.collapsed .nav-link .icon { margin-right: 0; font-size: 1.3rem; }
+.sidebar.collapsed .nav-text { display: none; }
+.sidebar.collapsed .chevron { display: none; }
+
+.menu-group { display: flex; flex-direction: column; }
+.group-items {
+  display: flex; flex-direction: column; gap: 0.2rem; padding-left: 1rem; margin-left: 1rem;
+  border-left: 1px solid var(--border-glass); max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s;
+}
+.group-items.expanded { max-height: 1000px; opacity: 1; margin-top: 0.3rem; }
+
+.group-items a { padding: 0.6rem 1rem; color: var(--text-muted); cursor: pointer; display: block; border-radius: 8px; }
+.group-items a:hover, .group-items a.active { color: var(--text-main); background: var(--bg-glass); }
+
+/* Collapsed Sidebar Popup Menus */
+.sidebar.collapsed .sidebar-scrollable { overflow: visible; }
+.sidebar.collapsed .menu-group { position: relative; }
+.sidebar.collapsed .group-items { position: absolute; left: calc(100% + 5px); top: 0; width: 240px; background: var(--bg-navbar); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 0.5rem; margin-left: 0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8); z-index: 9999; visibility: hidden; opacity: 0; transition: opacity 0.3s ease, visibility 0s linear 0.3s; max-height: 52vh; overflow-y: auto; }
+.sidebar.collapsed .group-items { gap: 0; }
+.sidebar.collapsed .group-items a { padding: 0.3rem 0.8rem; font-size: 0.85rem; }
+.sidebar.collapsed .group-items::before { content: ""; position: absolute; top: -20px; left: -20px; width: 20px; height: calc(100% + 40px); background: transparent; }
+.sidebar.collapsed .group-items::-webkit-scrollbar { width: 6px; }
+.sidebar.collapsed .group-items::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+.sidebar.collapsed .group-items.expanded, .sidebar.collapsed .menu-group:hover .group-items { visibility: visible; opacity: 1; margin-top: 0; transition-delay: 0s; }
+.sidebar.collapsed .group-items a { padding: 0.75rem 1rem; }
+
+.main-container {
+  margin-left: 280px;
+  width: calc(100% - 280px);
+  min-height: 100vh;
+  transition: margin-left 0.3s, width 0.3s;
+}
+body.sidebar-collapsed .main-container { margin-left: 80px; width: calc(100% - 80px); }
+
+.mobile-sidebar-toggle {
+  display: none;
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .sidebar { transform: translateX(-100%); z-index: 10001; width: 280px !important; }
+  .sidebar.collapsed { transform: translateX(-100%); width: 280px !important; }
+  .sidebar.mobile-open { transform: translateX(0) !important; }
+  .sidebar.collapsed.mobile-open { transform: translateX(0) !important; }
+  .main-container { margin-left: 0 !important; width: 100% !important; }
+  
+  .mobile-sidebar-toggle:hover ~ .sidebar,
+  .sidebar:hover {
+    transform: translateX(0);
+  }
+
+  .mobile-sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    width: 44px;
+    height: 44px;
+    z-index: 9999;
+    background: var(--bg-navbar, #1a1a2e);
+    border: 1px solid var(--border-glass-bright, rgba(255,255,255,0.2));
+    border-radius: 8px;
+    padding: 0;
+    color: var(--text-main, #fff);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .mobile-sidebar-toggle.open {
+    left: 290px;
+    z-index: 10002;
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 10000;
+  }
+}
+
+/* --- Cinematic RGU Logo Animation --- */
+.anim-letter {
+    stroke-width: 2px;
+    stroke-dasharray: 1500;
+    stroke-dashoffset: 1500;
+    fill-opacity: 0;
+    animation: drawCinematic 1.5s ease-in-out forwards, fillCinematic 1s 1.2s ease-out forwards;
+}
+.letter-r { stroke: #71307e; --end-fill: #71307e; animation-delay: 0s, 0s; }
+.letter-g { stroke: #2096db; --end-fill: #2096db; animation-delay: 0.4s, 0.4s; }
+.letter-u { stroke: #a5cb3a; --end-fill: #a5cb3a; animation-delay: 0.8s, 0.8s; }
+
+@keyframes drawCinematic {
+    0% { stroke-dashoffset: 1500; fill-opacity: 0; }
+    100% { stroke-dashoffset: 0; fill-opacity: 0; }
+}
+@keyframes fillCinematic {
+    0% { fill: var(--end-fill); fill-opacity: 0; }
+    100% { fill: var(--end-fill); fill-opacity: 1; stroke-opacity: 0; }
+}
+
+.anim-fade-up {
+    opacity: 0;
+    animation: fadeUpCinematic 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.subtitle-group { animation-delay: 1.8s; }
+.university-group { animation-delay: 2.1s; }
+
+@keyframes fadeUpCinematic {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.anim-rect {
+    transform-box: fill-box;
+    transform-origin: left center;
+    transform: scaleX(0);
+    animation: scaleXCinematic 1s cubic-bezier(0.86, 0, 0.07, 1) forwards;
+}
+.rect-1 { fill: #f29a33; animation-delay: 2.4s; }
+.rect-2 { fill: #2096db; animation-delay: 2.6s; }
+.rect-3 { fill: #a5cb3a; animation-delay: 2.8s; }
+
+@keyframes scaleXCinematic {
+    0% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+}
+/* ------------------------------------ */
+
+/* =========================================
+   CUSTOM THEME: "Two Reflections" (Glass/Mercury)
+   ========================================= */
+body.theme-custom {
+  --bg-main: #e2e8f0; /* Silver / Mercury base */
+  --bg-navbar: #cbd5e1;
+  --bg-glass: rgba(255, 255, 255, 0.6);
+  --bg-glass-heavy: rgba(255, 255, 255, 0.8);
+  --text-main: #1e293b;
+  --text-muted: #475569;
+  --border-glass: rgba(255, 255, 255, 0.5);
+  --border-glass-bright: rgba(255, 255, 255, 0.8);
+  --color-primary: #2563eb;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+}
+
+/* Base Panel Grouping (Mercury + Glass layer) */
+.theme-custom .bg-slate-900,
+.theme-custom .bg-slate-900\/50,
+.theme-custom .bg-slate-800 {
+  background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(226,232,240,0.5) 100%) !important;
+  /* Double reflection: Outer shadow (mercury body depth), top-left highlight (outer light), inner top-left (glass edge) */
+  box-shadow: 
+    10px 10px 20px rgba(100, 116, 139, 0.2), 
+    -10px -10px 20px rgba(255, 255, 255, 0.8),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(255,255,255,0.4) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* Sidebar overriding */
+.theme-custom .sidebar {
+  background: linear-gradient(180deg, rgba(241,245,249,0.8) 0%, rgba(226,232,240,0.6) 100%);
+  box-shadow: 5px 0 15px rgba(100, 116, 139, 0.1), inset 1px 0 2px rgba(255, 255, 255, 0.8);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* Button "Two Reflection" Surfaces */
+.theme-custom button,
+.theme-custom .nav-link,
+.theme-custom .group-items a,
+.theme-custom .sidebar-footer a {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(145deg, rgba(255,255,255,0.8), rgba(241,245,249,0.4)) !important;
+  box-shadow: 
+    4px 4px 8px rgba(100, 116, 139, 0.15), 
+    -4px -4px 8px rgba(255, 255, 255, 0.9), 
+    inset 1px 1px 2px rgba(255, 255, 255, 1),
+    inset -1px -1px 2px rgba(100, 116, 139, 0.05) !important;
+  border: 1px solid rgba(255,255,255,0.6) !important;
+  color: var(--text-main) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glass Badge for small tags */
+.theme-custom .glass-badge {
+  box-shadow: 
+    2px 2px 4px rgba(100, 116, 139, 0.15), 
+    -2px -2px 4px rgba(255, 255, 255, 0.8), 
+    inset 1px 1px 2px rgba(255, 255, 255, 1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+.theme-custom .glass-badge:hover {
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  transform: translateY(-1px);
+  box-shadow: 
+    4px 4px 8px rgba(100, 116, 139, 0.2), 
+    -4px -4px 8px rgba(255, 255, 255, 0.9), 
+    inset 1px 1px 2px rgba(255, 255, 255, 1) !important;
+}
+
+.theme-custom button:hover,
+.theme-custom .nav-link:hover,
+.theme-custom .group-items a:hover,
+.theme-custom .sidebar-footer a:hover {
+  background: linear-gradient(145deg, rgba(255,255,255,1), rgba(241,245,249,0.6)) !important;
+  box-shadow: 
+    6px 6px 12px rgba(100, 116, 139, 0.2), 
+    -6px -6px 12px rgba(255, 255, 255, 1), 
+    inset 1px 1px 3px rgba(255, 255, 255, 1) !important;
+  transform: translateY(-1px);
+}
+
+/* Authentic LED Backlight Effect */
+.theme-custom button::before,
+.theme-custom .nav-link::before,
+.theme-custom .group-items a::before,
+.theme-custom .sidebar-footer a::before {
+  content: '';
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  background: linear-gradient(45deg, #00f3ff, #7b2cbf, #ff00c8, #00f3ff);
+  background-size: 300% 300%;
+  z-index: -1;
+  filter: blur(8px);
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+}
+
+.theme-custom button:hover::before,
+.theme-custom .nav-link:hover::before,
+.theme-custom .group-items a:hover::before,
+.theme-custom .sidebar-footer a:hover::before {
+  opacity: 0.8;
+  animation: ledPulse 3s linear infinite;
+}
+
+@keyframes ledPulse {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.theme-custom button:active,
+.theme-custom .sidebar-footer a:active {
+  background: rgba(226,232,240,0.5) !important;
+  box-shadow: 
+    inset 4px 4px 8px rgba(100, 116, 139, 0.2), 
+    inset -4px -4px 8px rgba(255, 255, 255, 0.8) !important;
+  transform: translateY(1px);
+}
+
+/* Inputs & Selects (Inset Shadow for depth) */
+.theme-custom input,
+.theme-custom select,
+.theme-custom textarea {
+  background: rgba(241,245,249,0.5) !important;
+  box-shadow: 
+    inset 4px 4px 8px rgba(100, 116, 139, 0.1), 
+    inset -4px -4px 8px rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: var(--text-main) !important;
+}
+
+.theme-custom input:focus,
+.theme-custom select:focus {
+  background: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 
+    inset 2px 2px 5px rgba(100, 116, 139, 0.1), 
+    0 0 0 3px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* Color and Text overrides for light mode theme */
+.theme-custom .bg-slate-950 { background-color: var(--bg-main) !important; }
+.theme-custom .bg-slate-700 { background-color: rgba(148, 163, 184, 0.3) !important; color: var(--text-muted) !important; }
+
+.theme-custom .text-white { color: var(--text-main) !important; }
+.theme-custom .text-slate-100,
+.theme-custom .text-slate-200,
+.theme-custom .text-slate-300,
+.theme-custom .text-slate-400 { color: #334155 !important; } /* Darker slate for better contrast */
+.theme-custom .text-slate-500 { color: var(--text-muted) !important; }
+
+/* Alert / Status text color fixes for light background */
+.theme-custom .text-emerald-400,
+.theme-custom .text-emerald-500 { color: #059669 !important; }
+.theme-custom .text-emerald-200\/70 { color: #065f46 !important; }
+
+.theme-custom .text-yellow-400,
+.theme-custom .text-yellow-500 { color: #d97706 !important; }
+.theme-custom .text-yellow-200\/70 { color: #92400e !important; }
+
+.theme-custom .text-amber-400,
+.theme-custom .text-amber-500 { color: #b45309 !important; }
+
+.theme-custom .text-red-400,
+.theme-custom .text-red-500 { color: #dc2626 !important; }
+.theme-custom .text-red-200\/70 { color: #991b1b !important; }
+
+.theme-custom .text-blue-400,
+.theme-custom .text-blue-500 { color: #2563eb !important; }
+
+.theme-custom .text-cyan-400,
+.theme-custom .text-cyan-500 { color: #0e7490 !important; }
+
+.theme-custom .text-purple-300,
+.theme-custom .text-purple-400,
+.theme-custom .text-purple-500 { color: #7e22ce !important; }
+
+.theme-custom .border-slate-800,
+.theme-custom .border-slate-700,
+.theme-custom .border-slate-900,
+.theme-custom table,
+.theme-custom thead,
+.theme-custom tbody,
+.theme-custom tr,
+.theme-custom th,
+.theme-custom td,
+.theme-custom [class*="divide-"] > * + * { 
+    border-color: rgba(255,255,255,0.4) !important; 
+}
+.theme-custom thead {
+    background: rgba(255, 255, 255, 0.5) !important;
+}
+
+
+/* Glowing Scrollbar for Custom Theme */
+.theme-custom ::-webkit-scrollbar,
+.theme-custom .sidebar.collapsed .group-items::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+.theme-custom ::-webkit-scrollbar-track,
+.theme-custom .sidebar.collapsed .group-items::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  box-shadow: inset 0 0 8px rgba(0, 243, 255, 0.3); /* Subtle neon track */
+}
+.theme-custom ::-webkit-scrollbar-thumb,
+.theme-custom .sidebar.collapsed .group-items::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00f3ff, #ff00c8);
+  border-radius: 8px;
+  /* Simulating a glowing neon tube: white center, colored edges */
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 1), 0 0 5px rgba(0, 243, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.theme-custom ::-webkit-scrollbar-thumb:hover,
+.theme-custom .sidebar.collapsed .group-items::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00f3ff, #ff00c8);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 1), 0 0 8px rgba(255, 0, 200, 0.6);
+}
+
+/* =========================================
+   DARK NEON GLASS THEME
+   ========================================= */
+body.theme-dark-glass {
+  --bg-main: #050b14; /* Deep obsidian */
+  --bg-navbar: #0a1120;
+  --bg-glass: rgba(15, 23, 42, 0.6);
+  --bg-glass-heavy: rgba(15, 23, 42, 0.8);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-glass-bright: rgba(255, 255, 255, 0.2);
+  --color-primary: #00f3ff;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+}
+
+/* Base Panel Grouping (Dark Glass layer) */
+.theme-dark-glass .bg-slate-900,
+.theme-dark-glass .bg-slate-900\/50,
+.theme-dark-glass .bg-slate-800 {
+  background: linear-gradient(135deg, rgba(30,41,59,0.7) 0%, rgba(15,23,42,0.5) 100%) !important;
+  box-shadow: 
+    10px 10px 20px rgba(0, 0, 0, 0.5), 
+    -5px -5px 15px rgba(255, 255, 255, 0.05),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+/* Sidebar overriding */
+.theme-dark-glass .sidebar {
+  background: linear-gradient(180deg, rgba(15,23,42,0.8) 0%, rgba(5,11,20,0.6) 100%);
+  box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5), inset 1px 0 2px rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+/* Button Surfaces */
+.theme-dark-glass button,
+.theme-dark-glass .nav-link,
+.theme-dark-glass .group-items a,
+.theme-dark-glass .sidebar-footer a {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(145deg, rgba(30,41,59,0.8), rgba(15,23,42,0.4)) !important;
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.4), 
+    -2px -2px 6px rgba(255, 255, 255, 0.05), 
+    inset 1px 1px 2px rgba(255, 255, 255, 0.1),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  color: var(--text-main) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glass Badge for small tags */
+.theme-dark-glass .glass-badge {
+  box-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.3), 
+    -1px -1px 3px rgba(255, 255, 255, 0.05), 
+    inset 1px 1px 2px rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+.theme-dark-glass .glass-badge:hover {
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  transform: translateY(-1px);
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.4), 
+    -2px -2px 6px rgba(255, 255, 255, 0.1), 
+    inset 1px 1px 2px rgba(255, 255, 255, 0.2) !important;
+}
+
+.theme-dark-glass button:hover,
+.theme-dark-glass .nav-link:hover,
+.theme-dark-glass .group-items a:hover,
+.theme-dark-glass .sidebar-footer a:hover {
+  background: linear-gradient(145deg, rgba(51,65,85,0.9), rgba(30,41,59,0.6)) !important;
+  box-shadow: 
+    6px 6px 12px rgba(0, 0, 0, 0.5), 
+    -3px -3px 8px rgba(255, 255, 255, 0.1), 
+    inset 1px 1px 3px rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px);
+}
+
+/* Authentic LED Backlight Effect */
+.theme-dark-glass button::before,
+.theme-dark-glass .nav-link::before,
+.theme-dark-glass .group-items a::before,
+.theme-dark-glass .sidebar-footer a::before {
+  content: '';
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  background: linear-gradient(45deg, #00f3ff, #7b2cbf, #ff00c8, #00f3ff);
+  background-size: 300% 300%;
+  z-index: -1;
+  filter: blur(10px);
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+}
+
+.theme-dark-glass button:hover::before,
+.theme-dark-glass .nav-link:hover::before,
+.theme-dark-glass .group-items a:hover::before,
+.theme-dark-glass .sidebar-footer a:hover::before {
+  opacity: 1; /* More intense on dark bg */
+  animation: ledPulse 3s linear infinite;
+}
+
+.theme-dark-glass button:active,
+.theme-dark-glass .sidebar-footer a:active {
+  background: rgba(15,23,42,0.5) !important;
+  box-shadow: 
+    inset 4px 4px 8px rgba(0, 0, 0, 0.4), 
+    inset -2px -2px 4px rgba(255, 255, 255, 0.05) !important;
+  transform: translateY(1px);
+}
+
+/* Inputs & Selects */
+.theme-dark-glass input,
+.theme-dark-glass select,
+.theme-dark-glass textarea {
+  background: rgba(15,23,42,0.5) !important;
+  box-shadow: 
+    inset 4px 4px 8px rgba(0, 0, 0, 0.3), 
+    inset -2px -2px 4px rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-main) !important;
+}
+
+.theme-dark-glass input:focus,
+.theme-dark-glass select:focus {
+  background: rgba(30,41,59,0.8) !important;
+  box-shadow: 
+    inset 2px 2px 5px rgba(0, 0, 0, 0.3), 
+    0 0 0 3px rgba(0, 243, 255, 0.3) !important;
+}
+
+/* Dark Mode Text and Border adjustments */
+.theme-dark-glass .bg-slate-950 { background-color: var(--bg-main) !important; }
+.theme-dark-glass .bg-slate-700 { background-color: rgba(30, 41, 59, 0.5) !important; }
+
+.theme-dark-glass .border-slate-800,
+.theme-dark-glass .border-slate-700,
+.theme-dark-glass .border-slate-900,
+.theme-dark-glass table,
+.theme-dark-glass thead,
+.theme-dark-glass tbody,
+.theme-dark-glass tr,
+.theme-dark-glass th,
+.theme-dark-glass td,
+.theme-dark-glass [class*="divide-"] > * + * { 
+    border-color: rgba(255,255,255,0.1) !important; 
+}
+.theme-dark-glass thead {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+
+/* Glowing Scrollbar for Dark Glass Theme */
+.theme-dark-glass ::-webkit-scrollbar,
+.theme-dark-glass .sidebar.collapsed .group-items::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+.theme-dark-glass ::-webkit-scrollbar-track,
+.theme-dark-glass .sidebar.collapsed .group-items::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+}
+.theme-dark-glass ::-webkit-scrollbar-thumb,
+.theme-dark-glass .sidebar.collapsed .group-items::-webkit-scrollbar-thumb {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 2px solid #00f3ff;
+  box-shadow: inset 0 0 6px #ff00c8, 0 0 10px #00f3ff;
+}
+.theme-dark-glass ::-webkit-scrollbar-thumb:hover,
+.theme-dark-glass .sidebar.collapsed .group-items::-webkit-scrollbar-thumb:hover {
+  border: 2px solid #ff00c8;
+  box-shadow: inset 0 0 8px #00f3ff, 0 0 15px #ff00c8;
+}
+
+/* Custom Neon Scrollbar */
+.neon-scrollbar::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+.neon-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 8px;
+}
+.neon-scrollbar::-webkit-scrollbar-thumb {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 2px solid #00f3ff;
+  box-shadow: inset 0 0 6px #ff00c8, 0 0 10px #00f3ff;
+}
+.neon-scrollbar::-webkit-scrollbar-thumb:hover {
+  border: 2px solid #ff00c8;
+  box-shadow: inset 0 0 8px #00f3ff, 0 0 15px #ff00c8;
+}
+
+/* Filter Neon Scrollbar (Soft Gradient) */
+.filter-neon-scrollbar::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+.filter-neon-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  box-shadow: inset 0 0 8px rgba(0, 243, 255, 0.15);
+}
+.filter-neon-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00f3ff, #ff00c8);
+  border-radius: 8px;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.8), 0 0 8px rgba(0, 243, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.filter-neon-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00f3ff, #ff00c8);
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 1), 0 0 12px rgba(255, 0, 200, 0.8);
+}
+
+/* Custom Select Opaque Fix */
+.opaque-dropdown {
+  background-color: var(--bg-main, #0f172a) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  z-index: 9999 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+.hover-dropdown-item:hover {
+  background-color: var(--bg-navbar, #1e293b) !important;
+}
+.selected-dropdown-item {
+  background-color: var(--color-primary, #3b82f6) !important;
+  color: white !important;
+}
+
+/* =========================================
+   RATHINAM GLOBAL UNIVERSITY THEMES
+   ========================================= */
+
+body.theme-rathinam-light {
+  --bg-main: #f4f5f7;
+  --bg-navbar: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.8);
+  --bg-glass-heavy: rgba(255, 255, 255, 1);
+  --text-main: #3C3C3C;
+  --text-muted: #6b7280;
+  --border-glass: rgba(0, 0, 0, 0.08);
+  --border-glass-bright: rgba(0, 0, 0, 0.15);
+  
+  /* RGU Brand Colors */
+  --rgu-purple: #71307e;
+  --rgu-blue: #2096db;
+  --rgu-green: #a5cb3a;
+  --rgu-orange: #f29a33;
+  --color-primary: var(--rgu-purple);
+}
+
+body.theme-rathinam-dark {
+  --bg-main: #141116; /* Faint purple tint */
+  --bg-navbar: #1a171d;
+  --bg-glass: rgba(255, 255, 255, 0.03);
+  --bg-glass-heavy: rgba(255, 255, 255, 0.08);
+  --text-main: #f3f4f6;
+  --text-muted: #9ca3af;
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-bright: rgba(255, 255, 255, 0.15);
+  
+  /* RGU Brand Colors */
+  --rgu-purple: #71307e;
+  --rgu-blue: #2096db;
+  --rgu-green: #a5cb3a;
+  --rgu-orange: #f29a33;
+  --color-primary: var(--rgu-green);
+}
+
+/* Tailwind Overrides for Rathinam Themes */
+.theme-rathinam-light .bg-slate-950,
+.theme-rathinam-dark .bg-slate-950 { 
+  background-color: var(--bg-main) !important; 
+}
+
+.theme-rathinam-light .bg-slate-900,
+.theme-rathinam-dark .bg-slate-900,
+.theme-rathinam-light .bg-slate-900\/50,
+.theme-rathinam-dark .bg-slate-900\/50,
+.theme-rathinam-light .bg-slate-900\/40,
+.theme-rathinam-dark .bg-slate-900\/40,
+.theme-rathinam-light .bg-slate-800,
+.theme-rathinam-dark .bg-slate-800 {
+  background-color: var(--bg-glass) !important;
+  border-color: var(--border-glass) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.theme-rathinam-light .border-slate-800,
+.theme-rathinam-dark .border-slate-800,
+.theme-rathinam-light .border-slate-700,
+.theme-rathinam-dark .border-slate-700 {
+  border-color: var(--border-glass) !important;
+}
+
+.theme-rathinam-light .text-white:not(.always-white),
+.theme-rathinam-dark .text-white:not(.always-white) { 
+  color: var(--text-main) !important; 
+}
+
+.always-white {
+  color: white !important;
+}
+
+.theme-rathinam-light .text-slate-100,
+.theme-rathinam-dark .text-slate-100,
+.theme-custom .text-slate-100,
+.theme-rathinam-light .text-slate-200,
+.theme-rathinam-dark .text-slate-200,
+.theme-custom .text-slate-200,
+.theme-rathinam-light .text-slate-300,
+.theme-rathinam-dark .text-slate-300,
+.theme-custom .text-slate-300,
+.theme-rathinam-light .text-slate-400,
+.theme-rathinam-dark .text-slate-400,
+.theme-custom .text-slate-400 { 
+  color: var(--text-main) !important; 
+}
+
+.theme-rathinam-light .text-slate-500,
+.theme-rathinam-dark .text-slate-500,
+.theme-custom .text-slate-500 { 
+  color: var(--text-muted) !important; 
+}
+
+.theme-rathinam-light .bg-slate-800\/50,
+.theme-rathinam-dark .bg-slate-800\/50,
+.theme-custom .bg-slate-800\/50,
+.theme-rathinam-light .bg-slate-800\/80,
+.theme-rathinam-dark .bg-slate-800\/80,
+.theme-custom .bg-slate-800\/80 {
+  background-color: var(--bg-glass-heavy) !important;
+}
+
+.theme-rathinam-light .hover\:bg-slate-700:hover,
+.theme-rathinam-dark .hover\:bg-slate-700:hover,
+.theme-rathinam-light .hover\:bg-slate-900\/60:hover,
+.theme-rathinam-dark .hover\:bg-slate-900\/60:hover {
+  background-color: var(--bg-glass-heavy) !important;
+}
+
+.theme-rathinam-light input,
+.theme-rathinam-light select,
+.theme-rathinam-light textarea,
+.theme-rathinam-dark input,
+.theme-rathinam-dark select,
+.theme-rathinam-dark textarea {
+  background-color: var(--bg-glass) !important;
+  color: var(--text-main) !important;
+  border-color: var(--border-glass) !important;
+}
+
+.theme-rathinam-light input:focus,
+.theme-rathinam-light select:focus,
+.theme-rathinam-light textarea:focus,
+.theme-rathinam-dark input:focus,
+.theme-rathinam-dark select:focus,
+.theme-rathinam-dark textarea:focus {
+  border-color: var(--rgu-blue) !important;
+  box-shadow: 0 0 0 3px rgba(32, 150, 219, 0.2) !important;
+}
+
+/* =========================================
+   RATHINAM GRADIENT GLASS BRANDING
+   ========================================= */
+
+/* Button Transitions */
+.theme-rathinam-light button,
+.theme-rathinam-dark button,
+.theme-rathinam-light .nav-link,
+.theme-rathinam-dark .nav-link {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background-size: 200% auto !important;
+}
+
+/* Default Buttons: Purple to Blue Gradient */
+.theme-rathinam-light button,
+.theme-rathinam-dark button,
+.theme-rathinam-light button[class*="text-"],
+.theme-rathinam-dark button[class*="text-"] {
+  background-image: linear-gradient(135deg, var(--rgu-purple) 0%, var(--rgu-blue) 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(113, 48, 126, 0.3) !important;
+}
+
+.theme-rathinam-light button *,
+.theme-rathinam-dark button * {
+  color: white !important;
+}
+
+.theme-rathinam-light button:hover,
+.theme-rathinam-dark button:hover {
+  background-position: right center !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(32, 150, 219, 0.4) !important;
+}
+
+/* Submit/Action Buttons: Blue to Green Gradient */
+.theme-rathinam-light button[type="submit"],
+.theme-rathinam-dark button[type="submit"] {
+  background-image: linear-gradient(135deg, var(--rgu-blue) 0%, var(--rgu-green) 100%) !important;
+  box-shadow: 0 4px 15px rgba(32, 150, 219, 0.3) !important;
+}
+
+.theme-rathinam-light button[type="submit"]:hover,
+.theme-rathinam-dark button[type="submit"]:hover {
+  background-position: right center !important;
+  box-shadow: 0 6px 20px rgba(165, 203, 58, 0.4) !important;
+}
+
+/* Rathinam Active Nav Links (Gradient Border Effect) */
+.theme-rathinam-light .nav-link.active,
+.theme-rathinam-dark .nav-link.active {
+  background: linear-gradient(90deg, rgba(32, 150, 219, 0.1) 0%, transparent 100%) !important;
+  position: relative;
+  color: var(--rgu-blue) !important;
+  border-left: none !important;
+}
+
+.theme-rathinam-light .nav-link.active::before,
+.theme-rathinam-dark .nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--rgu-purple), var(--rgu-blue), var(--rgu-green));
+  border-radius: 0 4px 4px 0;
+}
+
+/* Rathinam Logo Brand Colors Extension */
+body.theme-rathinam-light .subtitle-group text {
+  fill: var(--rgu-blue) !important;
+}
+body.theme-rathinam-light .university-group text {
+  fill: var(--rgu-green) !important;
+}
+
+/* =========================================
+   RATHINAM 3D MATTE / COLORFUL THEME
+   ========================================= */
+body.theme-rathinam-3d {
+  --bg-main: #2b2b2b;
+  --bg-navbar: #333333;
+  --bg-glass: rgba(50, 50, 50, 0.85);
+  --bg-glass-heavy: rgba(60, 60, 60, 0.95);
+  --text-main: #f0f0f0;
+  --text-muted: #a0a0a0;
+  --border-glass: rgba(0, 0, 0, 0.5);
+  --border-glass-bright: rgba(255, 255, 255, 0.1);
+  --color-primary: #0087E1; 
+  --logo-text-color: #1a1a1a;
+  
+  /* Uneven Adobe-like matte surface with colorful glowing corners */
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(113, 36, 154, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 85% 20%, rgba(0, 135, 225, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 20% 85%, rgba(163, 201, 20, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 85% 85%, rgba(242, 154, 51, 0.15) 0%, transparent 50%),
+    linear-gradient(135deg, #2b2b2b 0%, #1f1f1f 100%) !important;
+  background-attachment: fixed !important;
+  color: var(--text-main);
+}
+
+/* 3D Matte Panels */
+.theme-rathinam-3d .bg-slate-900,
+.theme-rathinam-3d .bg-slate-950,
+.theme-rathinam-3d .bg-slate-900\/50,
+.theme-rathinam-3d .bg-slate-900\/40,
+.theme-rathinam-3d .bg-slate-800 {
+  background: #333333 !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 20px rgba(0, 0, 0, 0.6) !important;
+  border: 1px solid #1a1a1a !important;
+  border-top-color: #4a4a4a !important;
+  border-radius: 12px;
+}
+
+/* 3D Hardware/Software Buttons */
+.theme-rathinam-3d button,
+.theme-rathinam-3d .nav-link,
+.theme-rathinam-3d .group-items a {
+  background: linear-gradient(180deg, #4a4a4a 0%, #363636 100%) !important;
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.15),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.5),
+    0 2px 4px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid #1a1a1a !important;
+  border-bottom-color: #000 !important;
+  color: #dfdfdf !important;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.8);
+  transition: all 0.1s ease;
+  border-radius: 6px;
+}
+
+.theme-rathinam-3d button:hover,
+.theme-rathinam-3d .nav-link:hover {
+  background: linear-gradient(180deg, #555555 0%, #3f3f3f 100%) !important;
+  color: #ffffff !important;
+}
+
+.theme-rathinam-3d button:active,
+.theme-rathinam-3d .nav-link:active,
+.theme-rathinam-3d .nav-link.active {
+  background: linear-gradient(180deg, #2a2a2a 0%, #333333 100%) !important;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.6),
+    0 1px 1px rgba(255, 255, 255, 0.05) !important;
+  transform: translateY(1px);
+  color: #0087E1 !important; /* Blue active text */
+  border-top-color: #000 !important;
+}
+
+/* Give primary action buttons colorful 3D treatment (Green to Blue) */
+.theme-rathinam-3d button[type="submit"] {
+  background: linear-gradient(180deg, #A3C914 0%, #689c0b 100%) !important; /* Growth Green */
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.5),
+    0 2px 6px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid #3d6000 !important;
+  color: #ffffff !important;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.5);
+}
+.theme-rathinam-3d button[type="submit"]:hover {
+  background: linear-gradient(180deg, #b8df20 0%, #76ad12 100%) !important;
+}
+.theme-rathinam-3d button[type="submit"]:active {
+  background: linear-gradient(180deg, #5c8a08 0%, #689c0b 100%) !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Removed invalid CSS :contains that was breaking the build */
+
+/* Sidebar Specific */
+.theme-rathinam-3d .sidebar {
+  background: #2a2a2a;
+  border-right: 1px solid #111;
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.05), 4px 0 15px rgba(0,0,0,0.5);
+}
+
+/* Inputs 3D Bevel (Recessed) */
+.theme-rathinam-3d input,
+.theme-rathinam-3d select,
+.theme-rathinam-3d textarea {
+  background: #1e1e1e !important;
+  border: 1px solid #111 !important;
+  border-top-color: #000 !important;
+  border-bottom-color: #333 !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+  color: #e0e0e0 !important;
+  border-radius: 6px;
+}
+.theme-rathinam-3d input:focus,
+.theme-rathinam-3d select:focus {
+  border-color: #0087E1 !important;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 0 5px rgba(0, 135, 225, 0.5) !important;
+}
+
+/* Text Overrides */
+.theme-rathinam-3d .text-slate-500,
+.theme-rathinam-3d .text-muted { color: #aaaaaa !important; }
+
+/* =========================================
+   LOGO COLORS FOR DARK THEMES
+   ========================================= */
+body:not([class*="theme-"]) .subtitle-group text,
+.theme-dark-glass .subtitle-group text,
+.theme-rathinam-dark .subtitle-group text,
+.theme-rathinam-3d .subtitle-group text {
+  fill: #2096db !important; /* Sky Blue */
+}
+
+body:not([class*="theme-"]) .university-group text,
+.theme-dark-glass .university-group text,
+.theme-rathinam-dark .university-group text,
+.theme-rathinam-3d .university-group text {
+  fill: #a5cb3a !important; /* Lime Green */
+}
+
+
+/* Fix for transparent sticky table columns overlapping */
+body[class*='theme-'] .sticky.bg-slate-900 {
+  background-color: var(--bg-main) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Fix for native dropdown <option> background color in all themes */
+body[class*='theme-'] option,
+body[class*='theme-'] option.bg-slate-900 {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+/* --- Compatibility Classes for Transport Department --- */
+.input-field {
+  @apply w-full px-4 py-2 mt-1 bg-slate-800/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all;
+}
+
+.btn {
+  @apply px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white hover:bg-slate-700 transition-all font-medium cursor-pointer;
+}
+
+.btn-primary {
+  @apply bg-blue-600 border-blue-500 hover:bg-blue-500;
+}
+/* =========================================
+   FUEL REPORT MATRIX STYLES (4-Way Sticky)
+   ========================================= */
+.report-matrix-container {
+    overflow: auto;
+}
+
+.report-matrix-table th,
+.report-matrix-table td {
+    background-clip: padding-box; /* Fixes sticky border overlap issues */
+}
+
+/* Base sticky axes */
+.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+.sticky-bottom {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+}
+.sticky-left {
+    position: sticky;
+    left: 0;
+    z-index: 20;
+}
+.sticky-right {
+    position: sticky;
+    right: 0;
+    z-index: 20;
+}
+
+/* The four corners must have higher z-index to stay above both rows and columns */
+.sticky-corner-tl {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 30;
+}
+.sticky-corner-tr {
+    position: sticky;
+    top: 0;
+    right: 0;
+    z-index: 30;
+}
+.sticky-corner-bl {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+}
+.sticky-corner-br {
+    position: sticky;
+    bottom: 0;
+    right: 0;
+    z-index: 30;
+}
+
+/* Force solid backgrounds on sticky cells to prevent text bleeding in transparent themes */
+.report-matrix-table .sticky-top,
+.report-matrix-table .sticky-bottom,
+.report-matrix-table .sticky-left,
+.report-matrix-table .sticky-right,
+.report-matrix-table [class*="sticky-corner-"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-image: none !important; /* Removes theme gradients */
+}
+
+/* Specific solid colors for Dark Themes */
+body:not(.theme-rathinam-light):not(.theme-custom) .report-matrix-table .bg-slate-800,
+body:not(.theme-rathinam-light):not(.theme-custom) .report-matrix-table .bg-slate-900 {
+    background-color: #0f172a !important; /* Solid Slate 900 */
+    background: #0f172a !important; /* Solid Slate 900 */
+    background-image: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    border-color: #334155 !important; /* solid border */
+}
+body:not(.theme-rathinam-light):not(.theme-custom) .report-matrix-table .bg-blue-900 {
+    background: #1e3a8a !important; /* Solid Blue 900 */
+    background-image: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+}
+body:not(.theme-rathinam-light):not(.theme-custom) .report-matrix-table .bg-emerald-900 {
+    background-color: #064e3b !important; /* Solid Emerald 900 */
+}
+
+/* Specific solid colors for Light Themes */
+body.theme-rathinam-light .report-matrix-table .bg-slate-800,
+body.theme-rathinam-light .report-matrix-table .bg-slate-900,
+body.theme-custom .report-matrix-table .bg-slate-800,
+body.theme-custom .report-matrix-table .bg-slate-900 {
+    background: #ffffff !important; /* Solid White */
+    background-image: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important; /* solid border */
+}
+body.theme-rathinam-light .report-matrix-table .bg-blue-900,
+body.theme-custom .report-matrix-table .bg-blue-900 {
+    background: #e0e7ff !important; /* Solid light blue */
+    background-image: none !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    color: #1e3a8a !important;
+    border-color: #cbd5e1 !important;
+}
+body.theme-rathinam-light .report-matrix-table .bg-emerald-900,
+body.theme-custom .report-matrix-table .bg-emerald-900 {
+    background-color: #d1fae5 !important; /* Solid Emerald 100 */
+    color: #064e3b !important;
+}
+
+/* Fix text colors inside the fuel matrix table for light themes */
+body.theme-rathinam-light .report-matrix-table [class*="text-slate-"],
+body.theme-custom .report-matrix-table [class*="text-slate-"] {
+    color: #334155 !important;
+}
+body.theme-rathinam-light .report-matrix-table [class*="text-blue-"],
+body.theme-custom .report-matrix-table [class*="text-blue-"] {
+    color: #1e3a8a !important;
+}
+body.theme-rathinam-light .report-matrix-table [class*="text-emerald-"],
+body.theme-custom .report-matrix-table [class*="text-emerald-"] {
+    color: #064e3b !important;
+}
+
+/* Neumorphic Table Header */
+.table-header-neu {
+  background: var(--bg-navbar);
+  box-shadow: inset 2px 2px 5px var(--bg-glass-heavy), inset -2px -2px 5px rgba(0,0,0,0.2);
+  border-bottom: 2px solid var(--border-glass-bright);
+  color: var(--text-main);
+}
