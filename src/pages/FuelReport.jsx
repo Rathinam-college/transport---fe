@@ -33,7 +33,7 @@ ChartJS.register(
 
 const INST_COLORS = {
     RPS: '#f5a623', Common: '#3b82f6', KPM: '#10b981',
-    College: '#e74c3c', TIPS: '#a855f7', CAR: '#eab308'
+    University: '#e74c3c', College: '#e74c3c', TIPS: '#a855f7', CAR: '#eab308'
 };
 
 const CHART_DEFAULTS = {
