@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Activity, Database, ClipboardList, Menu, X, Layers, Shield, LogOut, FileText, Wrench } from 'lucide-react';
+import { Activity, Database, ClipboardList, Menu, X, Layers, Shield, LogOut, FileText, Wrench, Users } from 'lucide-react';
+
 import favicon from '../assets/favicon.svg';
 import RathinamTextLogo from '../assets/RathinamTextLogo';
 
@@ -146,6 +147,7 @@ const Sidebar = () => {
                                 <span className="flex items-center flex-1"><span className="icon"><FileText size={18} /></span> <span className="nav-text">Reports</span></span> <span className="chevron">{openGroup === 'reports' ? '▾' : '▸'}</span>
                             </div>
                             <div className={`group-items ${openGroup === 'reports' ? 'expanded' : ''}`}>
+                                <Link className={isActive('/report/students')} to="/report/students" onClick={closeMobileMenu}>Student Count Report</Link>
                                 <Link className={isActive('/report/odometer')} to="/report/odometer" onClick={closeMobileMenu}>Odometer Report</Link>
                                 <Link className={isActive('/report/fuel')} to="/report/fuel" onClick={closeMobileMenu}>Fuel Purchase Report</Link>
                                 <Link className={isActive('/report/expense')} to="/report/expense" onClick={closeMobileMenu}>Expense Report</Link>
@@ -159,6 +161,7 @@ const Sidebar = () => {
                                 <span className="flex items-center flex-1"><span className="icon"><ClipboardList size={18} /></span> <span className="nav-text">Data Entry</span></span> <span className="chevron">{openGroup === 'data-entry' ? '▾' : '▸'}</span>
                             </div>
                             <div className={`group-items ${openGroup === 'data-entry' ? 'expanded' : ''}`}>
+                                <Link className={isActive('/entry/students')} to="/entry/students" onClick={closeMobileMenu}>Student & Staff Riders</Link>
                                 <Link className={isActive('/entry/vehicle-odometer-log')} to="/entry/vehicle-odometer-log" onClick={closeMobileMenu}>Daily Odometer Log</Link>
                                 <Link className={isActive('/entry/fuel-data')} to="/entry/fuel-data" onClick={closeMobileMenu}>Fuel Entry</Link>
                                 <Link className={isActive('/entry/service-request')} to="/entry/service-request" onClick={closeMobileMenu}>Service Request</Link>
@@ -168,13 +171,12 @@ const Sidebar = () => {
                             </div>
                         </li>
 
-
-
                         <li className="menu-group">
                             <div className={`nav-link group-header ${openGroup === 'manage-entries' ? 'open' : ''}`} onClick={() => handleToggleGroup('manage-entries')} title="Manage Entries">
                                 <span className="flex items-center flex-1"><span className="icon"><ClipboardList size={18} /></span> <span className="nav-text">Manage Entries</span></span> <span className="chevron">{openGroup === 'manage-entries' ? '▾' : '▸'}</span>
                             </div>
                             <div className={`group-items ${openGroup === 'manage-entries' ? 'expanded' : ''}`}>
+                                <Link className={isActive('/check/students')} to="/check/students" onClick={closeMobileMenu}>Student & Staff Riders</Link>
                                 <Link className={isActive('/check/vehicle-odometer-log')} to="/check/vehicle-odometer-log" onClick={closeMobileMenu}>Daily Odometer Log</Link>
                                 <Link className={isActive('/check/fuel-data')} to="/check/fuel-data" onClick={closeMobileMenu}>Fuel Data</Link>
                                 <Link className={isActive('/check/service-request')} to="/check/service-request" onClick={closeMobileMenu}>Service Request</Link>
@@ -188,6 +190,7 @@ const Sidebar = () => {
                                 <span className="flex items-center flex-1"><span className="icon"><Database size={18} /></span> <span className="nav-text">Master Data</span></span> <span className="chevron">{openGroup === 'master-data' ? '▾' : '▸'}</span>
                             </div>
                             <div className={`group-items ${openGroup === 'master-data' ? 'expanded' : ''}`}>
+                                <Link className={isActive('/entry/students')} to="/entry/students" onClick={closeMobileMenu}>Student & Staff Directory</Link>
                                 <Link className={isActive('/entry/institution')} to="/entry/institution" onClick={closeMobileMenu}>Institution</Link>
                                 <Link className={isActive('/entry/registered-institution')} to="/entry/registered-institution" onClick={closeMobileMenu}>Registered Institution</Link>
                                 <Link className={isActive('/entry/vehicle')} to="/entry/vehicle" onClick={closeMobileMenu}>Vehicle</Link>
@@ -206,6 +209,7 @@ const Sidebar = () => {
                                 <span className="flex items-center flex-1"><span className="icon"><Layers size={18} /></span> <span className="nav-text">Manage Data</span></span> <span className="chevron">{openGroup === 'manage-data' ? '▾' : '▸'}</span>
                             </div>
                             <div className={`group-items ${openGroup === 'manage-data' ? 'expanded' : ''}`}>
+                                <Link className={isActive('/check/students')} to="/check/students" onClick={closeMobileMenu}>Student & Staff Directory</Link>
                                 <Link className={isActive('/check/institution')} to="/check/institution" onClick={closeMobileMenu}>Institution</Link>
                                 <Link className={isActive('/check/registered-institution')} to="/check/registered-institution" onClick={closeMobileMenu}>Registered Institution</Link>
                                 <Link className={isActive('/check/vehicle')} to="/check/vehicle" onClick={closeMobileMenu}>Vehicle</Link>

@@ -52,6 +52,10 @@ import CategoryManagement from './pages/CategoryManagement';
 import DatabaseManagement from './pages/DatabaseManagement';
 import Summary from './pages/Summary';
 import ServiceRequestStatus from './pages/ServiceRequestStatus';
+import StudentManagement from './pages/StudentManagement';
+import StudentCountReport from './pages/StudentCountReport';
+
+
 
 ChartJS.register(
   CategoryScale,
@@ -478,9 +482,13 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/summary" element={<Summary />} />
+          <Route path="/students" element={<StudentManagement />} />
           <Route path="/service-request-status" element={<ServiceRequestStatus />} />
+
           {/* Reports */}
+          <Route path="/report/students" element={<StudentCountReport />} />
           <Route path="/report/fuel" element={<FuelReport />} />
+
           <Route path="/report/expense" element={<ExpenseReport />} />
           <Route path="/report/odometer" element={<OdometerReport />} />
           <Route path="/report/fleet" element={<FleetReportOverview />} />
@@ -488,6 +496,8 @@ function App() {
           <Route path="/database-management" element={<DatabaseManagement />} />
           
           <Route path="/fleet/:id" element={<FleetDetails />} />
+          <Route path="/entry/students" element={<StudentManagement />} />
+          <Route path="/check/students" element={<StudentManagement />} />
           <Route path="/entry" element={<DataEntry />} />
           <Route path="/entry/:tab" element={<DataEntry />} />
           <Route path="/check" element={<DataCheck />} />

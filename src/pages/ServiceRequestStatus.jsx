@@ -52,7 +52,7 @@ ChartJS.register(
 
 // Fallback Institutions when DB is empty
 const DEFAULT_INSTITUTIONS = [
-  { id: 1, name: 'Rathinam College of Arts and Science (RCAS)' },
+  { id: 1, name: 'Rathinam University (RU)' },
   { id: 2, name: 'Rathinam Technical Campus (RTC)' },
   { id: 3, name: 'Rathinam School of Architecture (RSA)' },
   { id: 4, name: 'RPS School' },
@@ -66,7 +66,7 @@ const DEFAULT_SERVICE_REQUESTS = [
     request_id: 'SR202607280001',
     date: '2026-07-28',
     institution: 1,
-    institution_name: 'Rathinam College of Arts and Science (RCAS)',
+    institution_name: 'Rathinam University (RU)',
     vehicle: 1,
     vehicle_number: 'TN-37-AB-1234',
     cab_no: 'CAB-01',
@@ -136,7 +136,7 @@ const DEFAULT_SERVICE_REQUESTS = [
     request_id: 'SR202607100006',
     date: '2026-07-10',
     institution: 1,
-    institution_name: 'Rathinam College of Arts and Science (RCAS)',
+    institution_name: 'Rathinam University (RU)',
     vehicle: 6,
     vehicle_number: 'TN-37-MN-2345',
     cab_no: 'CAB-07',
